@@ -63,3 +63,9 @@ Makefile
 .idea/
 *.cbp
 berkeley
+
+# Latex build intermediary stuff
+*.aux
+*.log
+*.pdf
+*.synctex.gz

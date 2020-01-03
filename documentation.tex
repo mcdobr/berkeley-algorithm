@@ -1,0 +1,47 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage{caption}
+
+\title{Berkeley algorithm for clock synchronization}
+\author{Mircea-Constantin Dobreanu}
+\date{03/01/2020}
+
+\begin{document}
+\maketitle
+
+\section{Problem statement}
+
+\paragraph{}
+Clock synchronization is a topic in computer science and engineering that relates to the problems that appear when coordinating multiple systems and possible solutions to said problems. A computer running a single CPU with a single clock (not a clock in the classical sense, more like a timer implemented with the help of a very precise quartz crystal) makes determining the order in which events happen simple to understand. 
+
+\paragraph{}
+As an example think of a single computer checking modifying a file that has been previously created. Since there is only one clock there is no confusion about when the file was modified or created (the time of creation is before the time of modification). Now imagine two users on two different computers trying to modify the same file the same file at roughly the same time. Which change is made first? Well, since the clocks may be out of sync, the answer stops being simple.
+
+\section{Possible solutions}
+
+\section{Algorithm}
+
+\subsection{Description}
+
+\subsection{Pseudocode}
+
+\subsection{Usage example}
+
+\subsection{Correctness}
+
+\subsection{Complexity analysis}
+
+\subsection{Implementation}
+
+\subsection{Testing}
+
+\section{Conclusions}
+
+
+\bibliography{}
+
+\end{document}
