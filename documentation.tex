@@ -3,8 +3,14 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
 \usepackage{listings}
 \usepackage{caption}
+
+\usepackage[backend=biber,
+style=alphabetic,
+sorting=ynt]{biblatex}
+\addbibresource{documentation.bib}
 
 \title{Berkeley algorithm for clock synchronization}
 \author{Mircea-Constantin Dobreanu}
@@ -13,11 +19,11 @@
 \begin{document}
 \maketitle
 
+
 \section{Problem statement}
 
 \paragraph{}
 Clock synchronization is a topic in computer science and engineering that relates to the problems that appear when coordinating multiple systems and possible solutions to said problems. A computer running a single CPU with a single clock (not a clock in the classical sense, more like a timer implemented with the help of a very precise quartz crystal) makes determining the order in which events happen simple to understand. 
-
 \paragraph{}
 As an example think of a single computer checking modifying a file that has been previously created. Since there is only one clock there is no confusion about when the file was modified or created (the time of creation is before the time of modification). Now imagine two users on two different computers trying to modify the same file the same file at roughly the same time. Which change is made first? Well, since the clocks may be out of sync, the answer stops being simple.
 
@@ -26,8 +32,17 @@ As an example think of a single computer checking modifying a file that has been
 \section{Algorithm}
 
 \subsection{Description}
+\paragraph{}
+Many algorithms for solving clock synchronization have a passive server, meaning servers periodically ask it for the correct time. In Berkeley's algorithm (originally implemented in Berkeley UNIX) the server (master) polls every machine periodically and computes the actual time.
+
+\paragraph{}
+The actual time is computed by taking the average of all values, with the possibility of removing abberations from the survey. One important thing to know is that the time computed doesn't necessarily have to be the same with the real time. Many purposes are satisfied with just the clocks being synchronized within a small margin of error. This of course does not apply if any machine interacts with machines outside the network. As one can imagine, this consideration makes the algorithm suitable for intranets.
+
 
 \subsection{Pseudocode}
+example1 \cite{tanenbaum2007distributed}
+example2 \cite{gusella1989accuracy}
+
 
 \subsection{Usage example}
 
@@ -41,7 +56,6 @@ As an example think of a single computer checking modifying a file that has been
 
 \section{Conclusions}
 
-
-\bibliography{}
+\printbibliography
 
 \end{document}

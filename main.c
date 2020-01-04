@@ -95,7 +95,7 @@ void slave_wait_for_master_poll(int world_rank) {
 
 void slave_send_current_time(int world_rank) {
     double elapsed_time = current_time();
-    printf("Process [%d]: sending current time which is %lf seconds (from start of program) to master [%d]\n", world_rank, elapsed_time, MASTER_RANK);
+    printf("Process [%d]: sending current time which is %lf seconds to master [%d]\n", world_rank, elapsed_time, MASTER_RANK);
     MPI_Send(&elapsed_time, 1, MPI_DOUBLE, MASTER_RANK, TIME_GATHER_TAG, MPI_COMM_WORLD);
 }
 
