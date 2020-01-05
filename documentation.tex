@@ -7,10 +7,13 @@
 \usepackage{listings}
 \usepackage{caption}
 
-\usepackage[backend=biber,
-style=alphabetic,
-sorting=ynt]{biblatex}
+\usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}
 \addbibresource{documentation.bib}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+
 
 \title{Berkeley algorithm for clock synchronization}
 \author{Mircea-Constantin Dobreanu}
@@ -29,6 +32,12 @@ As an example think of a single computer checking modifying a file that has been
 
 \section{Possible solutions}
 
+\paragraph{}
+In a relatively simple system, a centralized server can be employed and the problem can be solved by using the Berkeley algorithm or Cristian's algorithm.
+
+\paragraph{}
+In a more complex syste, usually Network Time Protocol (NTP) is used.
+
 \section{Algorithm}
 
 \subsection{Description}
@@ -43,6 +52,25 @@ The actual time is computed by taking the average of all values, with the possib
 example1 \cite{tanenbaum2007distributed}
 example2 \cite{gusella1989accuracy}
 
+\begin{algorithm}
+\caption{Berkeley algorithm for clock synchronization}
+\begin{algorithmic}[1]
+	\State $master \leftarrow elect \textunderscore leader()$
+	\If{$node=MASTER$}
+		\State broadcast query to all nodes
+		\State reply to query with current time
+		\State compute average of clocks
+		\State send adjustments back to nodes
+		\State wait for adjustment
+		\State apply adjustment
+	\ElsIf{$node = SLAVE$}
+		\State wait for query
+		\State reply to query with current time
+		\State wait for adjustment
+		\State apply adjustment
+	\EndIf
+\end{algorithmic}
+\end{algorithm}
 
 \subsection{Usage example}
 
@@ -51,6 +79,10 @@ example2 \cite{gusella1989accuracy}
 \subsection{Complexity analysis}
 
 \subsection{Implementation}
+
+For the sake of simplicity the first node was considered to be master since the scope of the problem is to demonstrate a solution to clock synchronization.
+
+
 
 \subsection{Testing}
 
