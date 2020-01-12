@@ -1,0 +1,111 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{listings}
+\usepackage{caption}
+
+\usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}
+\addbibresource{documentation.bib}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{algorithmicx}
+
+
+
+\title{Berkeley algorithm for clock synchronization}
+\author{Mircea-Constantin Dobreanu}
+\date{16/01/2020}
+
+\begin{document}
+\maketitle
+
+
+\section{Problem statement}
+
+\paragraph{}
+Clock synchronization is a topic in computer science and engineering that relates to the problems that appear when coordinating multiple systems and possible solutions to said problems. A computer running a single CPU with a single clock (not a clock in the classical sense, more like a timer implemented with the help of a very precise quartz crystal) makes determining the order in which events happen simple to understand. 
+\paragraph{}
+As an example think of a single computer checking modifying a file that has been previously created. Since there is only one clock there is no confusion about when the file was modified or created (the time of creation is before the time of modification). Now imagine two users on two different computers trying to modify the same file the same file at roughly the same time. Which change is made first? Well, since the clocks may be out of sync, the answer stops being simple.
+
+\section{Possible solutions}
+
+\paragraph{}
+In a relatively simple system, a centralized server can be employed and the problem can be solved by using the Berkeley algorithm or Cristian's algorithm.
+
+\paragraph{}
+In a more complex system, usually Network Time Protocol (NTP) is used.
+
+\section{Algorithm}
+
+\subsection{Description}
+\paragraph{}
+Many algorithms for solving clock synchronization have a passive server, meaning servers periodically ask it for the correct time. In Berkeley's algorithm (originally implemented in Berkeley UNIX) the server (master) polls every machine periodically and computes the actual time.
+
+\paragraph{}
+The actual time is computed by taking the average of all values, with the possibility of removing abberations from the survey. One important thing to know is that the time computed doesn't necessarily have to be the same with the real time. Many purposes are satisfied with just the clocks being synchronized within a small margin of error. This of course does not apply if any machine interacts with machines outside the network. As one can imagine, this consideration makes the algorithm suitable for intranets.
+
+
+\subsection{Pseudocode}
+\paragraph{}
+The algorithm as explained in \cite{gusella1989accuracy} can be expressed as below. Throughout the paper we will use the notation $C_{M}(t_{n})$ for the master's clock at time $t_{n}$ and $C_{S}(t_{n})$ for a slave's clock at time $t_{n}$. 
+\paragraph{}
+The master-slave clock difference is computed as:
+
+	$$
+		\varDelta_{MS} = \frac{C_{M}(t_{poll\_send}) + C_{M}(t_{receive\_time})}{2} -C_{S}(t_{receive\_poll}) 
+	$$
+	
+\paragraph{}
+These values are computed for each slave and then averaged. From the average we then subtract the difference for each slave (the master is also adjusted and the difference is considered to be 0).
+
+\begin{algorithm}
+\caption{Berkeley algorithm for clock synchronization}
+\begin{algorithmic}[1]
+	\State elect MASTER
+	\If{$node=MASTER$}
+		\State collect master send times, slave times, master receive times
+		\State $avg \gets $ average of master-slave clock differences
+		\State $adjustment \gets avg-delta$
+		\State apply adjustment $avg$
+	\ElsIf{$node = SLAVE$}
+		\State wait for MASTER poll
+		\State reply to poll with current time
+		\State wait for adjustment from MASTER
+		\State apply adjustment
+	\EndIf
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Usage example}
+The example from the original paper is illustrative. Let's assume $C_{M} = 3:00$, $C_{S_{1}} = 2:55$, $C_{S_{2}} = 3:00$, $C_{S_{3}} = 3:25$. First, an interval is set such that we can exclude clocks we consider faulty. So, third slave to be faulty since it is so far ahead of the rest. The master is considered the base point and we compute the differences and average them. So $avg=\frac{0 + (-10) + (-5)}{3} = -5$. 
+
+\paragraph{}
+Then the algorithm requires the computation of the adjustments for every clock, be it a faulty clock or not. That way the master is adjusted by $-5$ minutes, first slave by $+5$ minutes, second slave by $0$ minutes, and the third slave (faulty one) is adjusted by $-25$ minutes. Now all the clocks should show time as 3 o'clock.
+
+\subsection{Correctness}
+
+\subsection{Complexity analysis}
+\paragraph{}
+The number of steps, after which all processing units finish the Berkeley algorithm is $O(N)$ since the master needs to collect the times from all the slaves.
+
+\paragraph{}
+The number of messages that are sent by all processing units during the algorithm's execution is $O(N)$ since each node sends a constant number of messages on a network clock synchronization.
+
+
+\subsection{Implementation}
+\paragraph{}
+For the sake of simplicity the first node was considered to be master since the scope of the problem is to demonstrate a solution to clock synchronization. Leader (master) election is also more of a topic to make this algorithm fault tolerant: slave nodes notice that the master does not respond or poll, then they know to trigger the election process.
+
+\subsection{Testing}
+Testing was done by manually inspecting the values computed by the implementation.
+
+\section{Conclusions}
+In conclusion, Berkeley algorithm is useful for synchronizing computer clocks within a reduced complexity network (the computers are not distributed over long geographic distances). That makes it a good alternative in an intranet if using a radio-based time server is not an option.
+
+\printbibliography
+
+\end{document}
