@@ -12,12 +12,13 @@
 
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{algorithmicx}
 
 
 
 \title{Berkeley algorithm for clock synchronization}
 \author{Mircea-Constantin Dobreanu}
-\date{03/01/2020}
+\date{16/01/2020}
 
 \begin{document}
 \maketitle
@@ -36,7 +37,7 @@ As an example think of a single computer checking modifying a file that has been
 In a relatively simple system, a centralized server can be employed and the problem can be solved by using the Berkeley algorithm or Cristian's algorithm.
 
 \paragraph{}
-In a more complex syste, usually Network Time Protocol (NTP) is used.
+In a more complex system, usually Network Time Protocol (NTP) is used.
 
 \section{Algorithm}
 
@@ -49,24 +50,31 @@ The actual time is computed by taking the average of all values, with the possib
 
 
 \subsection{Pseudocode}
-example1 \cite{tanenbaum2007distributed}
-example2 \cite{gusella1989accuracy}
+\paragraph{}
+The algorithm as explained in \cite{gusella1989accuracy} can be expressed as below. Throughout the paper we will use the notation $C_{M}(t_{n})$ for the master's clock at time $t_{n}$ and $C_{S}(t_{n})$ for a slave's clock at time $t_{n}$. 
+\paragraph{}
+The master-slave clock difference is computed as:
+
+	$$
+		\varDelta_{MS} = \frac{C_{M}(t_{poll\_send}) + C_{M}(t_{receive\_time})}{2} -C_{S}(t_{receive\_poll}) 
+	$$
+	
+\paragraph{}
+These values are computed for each slave and then averaged. From the average we then subtract the difference for each slave (the master is also adjusted and the difference is considered to be 0).
 
 \begin{algorithm}
 \caption{Berkeley algorithm for clock synchronization}
 \begin{algorithmic}[1]
-	\State $master \leftarrow elect \textunderscore leader()$
+	\State elect MASTER
 	\If{$node=MASTER$}
-		\State broadcast query to all nodes
-		\State reply to query with current time
-		\State compute average of clocks
-		\State send adjustments back to nodes
-		\State wait for adjustment
-		\State apply adjustment
+		\State collect master send times, slave times, master receive times
+		\State $avg \gets $ average of master-slave clock differences
+		\State $adjustment \gets avg-delta$
+		\State apply adjustment $avg$
 	\ElsIf{$node = SLAVE$}
-		\State wait for query
-		\State reply to query with current time
-		\State wait for adjustment
+		\State wait for MASTER poll
+		\State reply to poll with current time
+		\State wait for adjustment from MASTER
 		\State apply adjustment
 	\EndIf
 \end{algorithmic}
@@ -77,14 +85,20 @@ example2 \cite{gusella1989accuracy}
 \subsection{Correctness}
 
 \subsection{Complexity analysis}
+\paragraph{}
+The number of steps, after which all processing units finish the Berkeley algorithm is $O(N)$ since the master needs to collect the times from all the slaves.
+
+\paragraph{}
+The number of messages that are sent by all processing units during the algorithm's execution is $O(N)$ since each node sends a constant number of messages on a network clock synchronization.
+
+
 
 \subsection{Implementation}
-
-For the sake of simplicity the first node was considered to be master since the scope of the problem is to demonstrate a solution to clock synchronization.
-
-
+\paragraph{}
+For the sake of simplicity the first node was considered to be master since the scope of the problem is to demonstrate a solution to clock synchronization. Leader (master) election is also more of a topic to make this algorithm fault tolerant: slave nodes notice that the master does not respond or poll, then they know to trigger the election process.
 
 \subsection{Testing}
+Testing was done by manually inspecting the values computed by the implementation.
 
 \section{Conclusions}
 
