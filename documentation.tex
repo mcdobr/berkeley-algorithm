@@ -81,6 +81,7 @@ These values are computed for each slave and then averaged. From the average we 
 \end{algorithm}
 
 \subsection{Usage example}
+\paragraph{}
 The example from the original paper is illustrative. Let's assume $C_{M} = 3:00$, $C_{S_{1}} = 2:55$, $C_{S_{2}} = 3:00$, $C_{S_{3}} = 3:25$. First, an interval is set such that we can exclude clocks we consider faulty. So, third slave to be faulty since it is so far ahead of the rest. The master is considered the base point and we compute the differences and average them. So $avg=\frac{0 + (-10) + (-5)}{3} = -5$. 
 
 \paragraph{}
@@ -101,9 +102,11 @@ The number of messages that are sent by all processing units during the algorith
 For the sake of simplicity the first node was considered to be master since the scope of the problem is to demonstrate a solution to clock synchronization. Leader (master) election is also more of a topic to make this algorithm fault tolerant: slave nodes notice that the master does not respond or poll, then they know to trigger the election process.
 
 \subsection{Testing}
+\paragraph{}
 Testing was done by manually inspecting the values computed by the implementation.
 
 \section{Conclusions}
+\paragraph{}
 In conclusion, Berkeley algorithm is useful for synchronizing computer clocks within a reduced complexity network (the computers are not distributed over long geographic distances). That makes it a good alternative in an intranet if using a radio-based time server is not an option.
 
 \printbibliography
