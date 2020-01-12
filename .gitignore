@@ -69,3 +69,7 @@ berkeley
 *.log
 *.pdf
 *.synctex.gz
+/documentation.bbl
+/documentation.bcf
+/documentation.blg
+/documentation.run.xml
