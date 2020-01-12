@@ -94,7 +94,7 @@ void slave_wait_for_adjustment(int world_rank) {
 
     double time = current_time();
     accumulated_adjustment += adjustment;
-    printf("Process [%d]: local time is %.6lf, received adjustment %.6lf, adjusted time is %.6lf\n", world_rank, time, adjustment, time + accumulated_adjustment);
+    printf("Process [%d]: local time is %.6lf, received adjustment %.6lf, adjusted time is %.6lf\n", world_rank, time + accumulated_adjustment - adjustment, adjustment, time + accumulated_adjustment);
 }
 
 void master_synchronize_clocks(int world_size, int world_rank) {
@@ -120,7 +120,7 @@ void master_synchronize_clocks(int world_size, int world_rank) {
         }
     }
 
-
+    master_slave_time_differences[MASTER_RANK] = 0.0;
     double average_delta = average_time_differences(world_size, master_slave_time_differences);
     printf("Master: the average_time_differences time difference is %lf\n", average_delta);
 
@@ -178,7 +178,7 @@ double average_time_differences(int world_size, const double *array) {
     double result = 0.0;
     for (int rank = 0; rank < world_size; ++rank) {
         if (rank != MASTER_RANK) {
-            result += 1.0 / (world_size - 1) * array[rank];
+            result += 1.0 / world_size * array[rank];
         }
     }
     return result;
