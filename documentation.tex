@@ -62,6 +62,9 @@ The master-slave clock difference is computed as:
 \paragraph{}
 These values are computed for each slave and then averaged. From the average we then subtract the difference for each slave (the master is also adjusted and the difference is considered to be 0).
 
+\paragraph{}
+The average is computed in a fault tolerant way, so only clocks that are not considered faulty (that have strayed too much from the majority of time values) are taken into account in the averaging function.
+
 \begin{algorithm}
 \caption{Berkeley algorithm for clock synchronization}
 \begin{algorithmic}[1]
@@ -101,9 +104,18 @@ The number of messages that are sent by all processing units during the algorith
 \paragraph{}
 For the sake of simplicity the first node was considered to be master since the scope of the problem is to demonstrate a solution to clock synchronization. Leader (master) election is also more of a topic to make this algorithm fault tolerant: slave nodes notice that the master does not respond or poll, then they know to trigger the election process.
 
+\paragraph{}
+Also for simplicity, all clocks are considered to be non-faulty; they do not stray too much from the actual time.
+
+\paragraph{}
+There is an attached C with MPI project that demonstrates the algorithm; it is not a production-ready implementation.
+
 \subsection{Testing}
 \paragraph{}
 Testing was done by manually inspecting the values computed by the implementation.
+
+\paragraph{}
+Visually seeing the clocks synchronized would imply each process have the main thread for communication and another thread that displays an animated clock with the adjusted time.
 
 \section{Conclusions}
 \paragraph{}
