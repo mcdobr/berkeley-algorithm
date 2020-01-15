@@ -7,13 +7,9 @@
 \usepackage{listings}
 \usepackage{caption}
 
-\usepackage[backend=biber,style=alphabetic,sorting=ynt]{biblatex}
-\addbibresource{documentation.bib}
-
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{algorithmicx}
-
 
 
 \title{Berkeley algorithm for clock synchronization}
@@ -27,7 +23,7 @@
 \section{Problem statement}
 
 \paragraph{}
-Clock synchronization is a topic in computer science and engineering that relates to the problems that appear when coordinating multiple systems and possible solutions to said problems. A computer running a single CPU with a single clock (not a clock in the classical sense, more like a timer implemented with the help of a very precise quartz crystal) makes determining the order in which events happen simple to understand. 
+Clock synchronization is a topic in computer science and engineering that relates to the problems that appear when coordinating multiple systems and possible solutions to said problems. A computer running a single CPU with a single clock (not a clock in the classical sense, more like a timer implemented with the help of a very precise quartz crystal) makes determining the order in which events happen simple to understand \cite{tanenbaum2007distributed}.
 \paragraph{}
 As an example think of a single computer checking modifying a file that has been previously created. Since there is only one clock there is no confusion about when the file was modified or created (the time of creation is before the time of modification). Now imagine two users on two different computers trying to modify the same file the same file at roughly the same time. Which change is made first? Well, since the clocks may be out of sync, the answer stops being simple.
 
@@ -121,6 +117,8 @@ Visually seeing the clocks synchronized would imply each process have the main t
 \paragraph{}
 In conclusion, Berkeley algorithm is useful for synchronizing computer clocks within a reduced complexity network (the computers are not distributed over long geographic distances). That makes it a good alternative in an intranet if using a radio-based time server is not an option.
 
-\printbibliography
+
+\bibliographystyle{unsrt}
+\bibliography{references.bib}
 
 \end{document}
