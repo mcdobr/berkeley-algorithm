@@ -86,8 +86,6 @@ The example from the original paper is illustrative. Let's assume $C_{M} = 3:00$
 \paragraph{}
 Then the algorithm requires the computation of the adjustments for every clock, be it a faulty clock or not. That way the master is adjusted by $-5$ minutes, first slave by $+5$ minutes, second slave by $0$ minutes, and the third slave (faulty one) is adjusted by $-25$ minutes. Now all the clocks should show time as 3 o'clock.
 
-\subsection{Correctness}
-
 \subsection{Complexity analysis}
 \paragraph{}
 The number of steps, after which all processing units finish the Berkeley algorithm is $O(N)$ since the master needs to collect the times from all the slaves.
